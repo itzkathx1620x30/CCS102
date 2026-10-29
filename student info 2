@@ -1,0 +1,158 @@
+#include <stdio.h>
+
+#define MAX_YEAR_LEVEL 4
+#define MAX_ID 999999
+
+int errorCount = 0;
+
+void showHeader() {
+    printf("===== STUDENT INFORMATION SYSTEM =====\n\n");
+}
+
+int inputStudentID() {
+    int id;
+    printf("Enter Student ID: ");
+    scanf("%d", &id);
+    return id;
+}
+
+void inputName(char name[]) {
+    printf("Enter Name: ");
+    scanf(" %[^\n]", name);
+}
+
+int inputAge() {
+    int age;
+    printf("Enter Age: ");
+    scanf("%d", &age);
+    return age;
+}
+
+void inputCourse(char course[]) {
+    printf("Enter Course: ");
+    scanf(" %[^\n]", course);
+}
+
+int inputYearLevel() {
+    int year;
+    printf("Enter Year Level (1-%d): ", MAX_YEAR_LEVEL);
+    scanf("%d", &year);
+    return year;
+}
+
+void checkID(int id) {
+    if (id <= 0) {
+        printf("Student ID must be greater than 0.\n");
+        errorCount += 1;
+    } else if (id % (MAX_ID + 1) != id) {
+        printf("Student ID must not be more than 6 digits.\n");
+        errorCount += 1;
+    }
+}
+
+void checkAge(int age) {
+    if (age <= 0) {
+        printf("Age must be greater than 0.\n");
+        errorCount += 1;
+    }
+}
+
+void checkYearLevel(int year) {
+    if (year < 1 || year > MAX_YEAR_LEVEL) {
+        printf("Year level must be from 1 to %d.\n", MAX_YEAR_LEVEL);
+        errorCount += 1;
+    }
+}
+
+int validateStudent(int id, int age, int year) {
+    checkID(id);
+    checkAge(age);
+    checkYearLevel(year);
+
+    if (errorCount == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void displayStudent(int id, char name[], int age, char course[], int year) {
+    printf("\n===== STUDENT INFORMATION =====\n");
+    printf("Student ID : %d\n", id);
+    printf("Name       : %s\n", name);
+    printf("Age        : %d\n", age);
+    printf("Course     : %s\n", course);
+    printf("Year Level : %d\n", year);
+}
+
+double computeProgress(int year) {
+    double progress = year;
+    progress *= 100.0 / MAX_YEAR_LEVEL;
+    return progress;
+}
+
+void showYearLevel(int year) {
+    switch (year) {
+        case 1:
+            printf("Year Level: First Year\n");
+            break;
+        case 2:
+            printf("Year Level: Second Year\n");
+            break;
+        case 3:
+            printf("Year Level: Third Year\n");
+            break;
+        case 4:
+            printf("Year Level: Fourth Year\n");
+            break;
+    }
+    printf("Program Progress: %.2f%%\n", computeProgress(year));
+}
+
+void showMenu() {
+    printf("\n===== STUDENT MENU =====\n");
+    printf("1. View Student Status\n");
+    printf("2. View Year Level\n");
+    printf("Enter your choice: ");
+}
+
+void handleChoice(int choice, int year) {
+    switch (choice) {
+        case 1:
+            printf("Status: Registered Student\n");
+            break;
+        case 2:
+            showYearLevel(year);
+            break;
+        default:
+            printf("Invalid menu choice!\n");
+    }
+}
+
+int main() {
+    int studentID;
+    char name[50];
+    int age;
+    char course[50];
+    int yearLevel;
+    int choice;
+
+    showHeader();
+
+    studentID = inputStudentID();
+    inputName(name);
+    age = inputAge();
+    inputCourse(course);
+    yearLevel = inputYearLevel();
+
+    if (validateStudent(studentID, age, yearLevel)) {
+        displayStudent(studentID, name, age, course, yearLevel);
+        showMenu();
+        scanf("%d", &choice);
+        handleChoice(choice, yearLevel);
+    } else {
+        printf("\nInvalid student information!\n");
+    }
+
+    return 0;
+}
